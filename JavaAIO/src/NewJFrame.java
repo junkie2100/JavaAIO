@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JEditorPane;
+import javax.swing.SwingUtilities;
 
 /*
  * To change this template, choose Tools | Templates
@@ -33,8 +34,11 @@ public class NewJFrame extends javax.swing.JFrame {
     int nv;
     String newversion;
     String selecteddevice;
+    String pluginpath;
+    private long mStartTimeInMiliseconds;
+    private long mTimeoutValueInMiliseconds; 
     
-     
+
 
      
     
@@ -51,7 +55,9 @@ public class NewJFrame extends javax.swing.JFrame {
     
     public NewJFrame() throws Exception {
         initComponents();
-          selecteddevice = getlocaldevice();     
+            
+          selecteddevice = getlocaldevice();
+          
      try {
          version = getlocalversion();
          System.out.println(version);
@@ -73,13 +79,15 @@ try {
 this.setIconImage(image);
         if (isWindows()) {
         adbpath = ".\\files\\adb.exe";
-        
+        pluginpath = ".\\plugins\\" + selecteddevice + "\\";
         }
         if (isUnix()) {
         adbpath = "./files/adb";
+        pluginpath = "./plugins/" + selecteddevice + "/";
         }
         if (isMac()) {
         adbpath = "./files/adb-mac";
+        pluginpath = "./plugins/" + selecteddevice + "/";
         }
     }
     
@@ -87,6 +95,7 @@ this.setIconImage(image);
     
     String test;
     String text;
+    String text2;
     String test2;
     String test3;
     String test4;
@@ -134,6 +143,8 @@ private static String OS = System.getProperty("os.name").toLowerCase();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
@@ -220,29 +231,39 @@ private static String OS = System.getProperty("os.name").toLowerCase();
 
         jLabel17.setForeground(java.awt.Color.red);
 
+        jTextArea2.setEditable(false);
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea2);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jSeparator1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 347, Short.MAX_VALUE)
-                        .addComponent(jButton5))
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3)
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(jSeparator1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 347, Short.MAX_VALUE)
+                                .addComponent(jButton5))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addGap(55, 55, 55)
+                                .addComponent(jButton4))
+                            .addComponent(jLabel17)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addGap(55, 55, 55)
-                        .addComponent(jButton4))
-                    .addComponent(jLabel17))
+                        .addContainerGap()
+                        .addComponent(jScrollPane3)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -261,7 +282,9 @@ private static String OS = System.getProperty("os.name").toLowerCase();
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jButton3))
@@ -326,7 +349,7 @@ private static String OS = System.getProperty("os.name").toLowerCase();
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton1))
@@ -354,7 +377,7 @@ private static String OS = System.getProperty("os.name").toLowerCase();
 
         jLabel12.setText("Rooted:");
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("type command here then hit \"Run\"");
 
         jButton7.setText("Run");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -366,7 +389,7 @@ private static String OS = System.getProperty("os.name").toLowerCase();
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("The above box will run any adb arguments\npush C:\\blah.blah /sdcard/blah.blah\nruns\nadb push C:\\blah.blah /sdcard/blah.blah\nwhich puts blah.blah from the c drive onto your sd\n\n");
+        jTextArea1.setText("The above box will run any adb arguments\npush C:\\blah.blah /sdcard/blah.blah\nruns\nadb push C:\\blah.blah /sdcard/blah.blah\nwhich puts blah.blah from the c drive onto your sd\n\nthis process will continue untill it is finished, or untill you kill it manually\n");
         jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -377,13 +400,10 @@ private static String OS = System.getProperty("os.name").toLowerCase();
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
-                        .addComponent(jButton6))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
@@ -391,38 +411,48 @@ private static String OS = System.getProperty("os.name").toLowerCase();
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel7))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
+                                .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel11))
-                            .addComponent(jTextField1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)))
+                                .addComponent(jLabel8)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel11)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jSeparator2))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton6)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel10))))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel10)
-                    .addComponent(jButton6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -472,7 +502,7 @@ private static String OS = System.getProperty("os.name").toLowerCase();
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
@@ -528,7 +558,7 @@ private static String OS = System.getProperty("os.name").toLowerCase();
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(jButton11)
                 .addGap(89, 89, 89))
         );
@@ -589,7 +619,7 @@ private static String OS = System.getProperty("os.name").toLowerCase();
         buffer.append((char)c);
 
         }
-        return buffer.substring(buffer.indexOf("[device]")+9,buffer.indexOf("[/device]"));
+        return buffer.substring(buffer.indexOf("[device]")+8,buffer.indexOf("[/device]"));
     }
 
     
@@ -625,13 +655,13 @@ private static String OS = System.getProperty("os.name").toLowerCase();
     }
     
             if (isWindows()) {
-        command = "cmd /c start .\\plugins\\" + selecteddevice + "\\recovery.bat " + methodpass + " " + recoveryfile + " " + selecteddevice;
+        command = "cmd /c start .\\plugins\\" + selecteddevice + "\\recovery.bat " + methodpass + " " + recoveryfile + " " + pluginpath;
         }
         if (isUnix()) {
-        command = "./plugins/" + selecteddevice + "/recovery.sh " + methodpass + " " + recoveryfile + " " + selecteddevice;
+        command = "./plugins/" + selecteddevice + "/recovery.sh " + methodpass + " " + recoveryfile + " " + pluginpath;
         }
         if (isMac()) {
-        command = "./plugins/" + selecteddevice + "/recovery.command " + methodpass + " " + recoveryfile + " " + selecteddevice;
+        command = "./plugins/" + selecteddevice + "/recovery.command " + methodpass + " " + recoveryfile + " " + pluginpath;
         }
         System.out.println(command);
     try{
@@ -652,22 +682,60 @@ private static String OS = System.getProperty("os.name").toLowerCase();
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
         if (isWindows()) {
-        command = "cmd /c start .\\plugins\\" + selecteddevice + "\\root.bat" + selecteddevice;
+        command = "cmd /c start .\\plugins\\" + selecteddevice + "\\root.bat " + pluginpath;
         }
         if (isUnix()) {
-        command = "./plugins/" + selecteddevice + "/root.sh" + selecteddevice;
+        command = "./plugins/" + selecteddevice + "/root.sh " + pluginpath;
         }
         if (isMac()) {
-        command = "./plugins/" + selecteddevice + "/root.command" + selecteddevice;
+        command = "./plugins/" + selecteddevice + "/root.command " + pluginpath;
         }    // TODO add your handling code here:
 
+        text2 = "start";
         try{
             p7 = Runtime.getRuntime().exec(command);
-            int exitCode = p7.waitFor();
-}catch(IOException e){
-}       catch (InterruptedException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            final InputStream stream = p7.getInputStream();
+new Thread(new Runnable() {
+    public void run() {
+      BufferedReader reader = null;
+      try {
+        reader = new BufferedReader(new InputStreamReader(stream));
+        String line = null;
+        mTimeoutValueInMiliseconds = 10000;
+        mStartTimeInMiliseconds = System.currentTimeMillis();
+      
+      
+     while ((line = reader.readLine()) != null) {
+         
+         if (System.currentTimeMillis() - mStartTimeInMiliseconds < mTimeoutValueInMiliseconds)
+         {
+         jTextArea2.append("\n" + line);
+         }
+         else {
+             jTextArea2.append("\n" + "This Process was taking too long. Check your devices drivers and try again.");
+             p7.destroy();
+         }
+         //When the the timeout value is reached, the process is
+        //destroyed
+     }
+      } catch (Exception e) {
+        // TODO
+      } finally {
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException e) {
+            // ignore
+          }
         }
+      }
+    }
+  }).start();
+
+
+}catch(IOException e){
+
+}
         
       // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -676,22 +744,65 @@ private static String OS = System.getProperty("os.name").toLowerCase();
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
 
         if (isWindows()) {
-        command = "cmd /c start .\\plugins\\" + selecteddevice + "\\unroot.bat" + selecteddevice;
+        command = "cmd /c start .\\plugins\\" + selecteddevice + "\\unroot.bat " + pluginpath;
         }
         if (isUnix()) {
-        command = "./plugins/" + selecteddevice + "/unroot.sh" + selecteddevice;
+        command = "./plugins/" + selecteddevice + "/unroot.sh " + pluginpath;
         }
         if (isMac()) {
-        command = "./plugins/" + selecteddevice + "/unroot.command" + selecteddevice;
+        command = "./plugins/" + selecteddevice + "/unroot.command " + pluginpath;
         }    // TODO add your handling code here:
 
+        text2 = "start";
         try{
             p8 = Runtime.getRuntime().exec(command);
-            int exitCode = p6.waitFor();
-}catch(IOException e){
-}       catch (InterruptedException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            
+
+//Here we first read the next line into the variable
+//line and then check for the EOF condition, which
+//is the return value of null
+final InputStream stream = p8.getInputStream();
+new Thread(new Runnable() {
+    public void run() {
+      BufferedReader reader = null;
+      try {
+        reader = new BufferedReader(new InputStreamReader(stream));
+        String line = null;
+        mTimeoutValueInMiliseconds = 10000;
+        mStartTimeInMiliseconds = System.currentTimeMillis();
+      
+      
+     while ((line = reader.readLine()) != null) {
+         
+         if (System.currentTimeMillis() - mStartTimeInMiliseconds < mTimeoutValueInMiliseconds)
+         {
+         jTextArea2.append("\n" + line);
+         }
+         else {
+             jTextArea2.append("\n" + "This Process was taking too long. Check your devices drivers and try again.");
+             p7.destroy();
+         }
+         //When the the timeout value is reached, the process is
+        //destroyed
+     }
+      } catch (Exception e) {
+        // TODO
+      } finally {
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException e) {
+            // ignore
+          }
         }
+      }
+    }
+  }).start();
+
+
+}catch(IOException e){
+
+}
         
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -741,35 +852,41 @@ if (test5.contains("not found")) {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 
+
+    
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-
-adbcommand = jTextField1.getText();
-if (adbcommand != "shell"){
-        try{
-text = "start";
-    psb = Runtime.getRuntime().exec(adbpath + " " + adbcommand);
-
-BufferedReader inputa =
-    new BufferedReader(new InputStreamReader(psb.getInputStream()));
-
-//Here we first read the next line into the variable
-//line and then check for the EOF condition, which
-//is the return value of null
-
-
-
-while (text != null) {
-text = inputa.readLine();
-if (text != null){
-jTextArea1.append("\n" + text);
-}
-if (text == null){
-jTextArea1.append("\n");
-}
-}
-}catch(IOException e){
-}
-}
+ 
+        adbcommand = jTextField1.getText();
+        
+        try {
+            psb = Runtime.getRuntime().exec(adbpath + " " + adbcommand);
+        } catch (IOException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  final InputStream stream = psb.getInputStream();
+  new Thread(new Runnable() {
+    public void run() {
+      BufferedReader reader = null;
+      try {
+        reader = new BufferedReader(new InputStreamReader(stream));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+         jTextArea1.append("\n" + line);
+        }
+      } catch (Exception e) {
+        // TODO
+      } finally {
+        if (reader != null) {
+          try {
+            reader.close();
+          } catch (IOException e) {
+            // ignore
+          }
+        }
+      }
+    }
+  }).start();
+        
         // TODO add your handling code here: 
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -896,12 +1013,14 @@ int exitCode = pull.waitFor();
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JTabbedPane jTabbedPane6;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
